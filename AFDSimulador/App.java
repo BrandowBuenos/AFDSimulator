@@ -7,29 +7,7 @@ public class App {
     static int LineCharArrayCount = 0;
 
     public static void main(String[] args) {
-
-        Scanner inputScanner = new Scanner(System.in);
-        DFA.GetDFATable();
-
-        boolean userSatisfied = false;
-        System.out.println(
-                "\nVamos lá ! Agora, verifique se as palavras pertencem a linguagem. Para sair, escreva sair.\n");
-
-        while (!userSatisfied) {
-            System.out.print("> ");
-            String inputString = inputScanner.nextLine();
-            if (inputString.contentEquals("sair"))
-                break;
-            else {
-                // converting into readable format
-                LineCharArray = inputString.toCharArray();
-                LineCharArrayCount = 0;
-                // transitions start
-                Algorithm(); // string matching algorithm
-            }
-        }
-
-        inputScanner.close();
+        AfdGUI start = new AfdGUI();
     }
 
     private static void Algorithm() {
