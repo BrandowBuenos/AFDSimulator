@@ -12,15 +12,15 @@ public class DFA {
         Scanner getValues = new Scanner(System.in);
         Scanner finalStateScanner = new Scanner(System.in);
         // getting the DFA states to initialize the array
-        System.out.println("Enter the no. of DFA states");
+        System.out.print("\nInsira o número de estados do autômato: ");
         noOfStates = getValues.nextInt() + 1;
-        System.out.println("Enter the no. of DFA Terminals");
+        System.out.print("\nInsira o número de variáveis terminais do autômato: ");
         noOfTerminals = getValues.nextInt() + 1;
 
         DfaTable = new char[noOfStates][noOfTerminals];
 
         // storing elements into the DFA table
-        System.out.println("Enter all the elements in the DFA table");
+        System.out.println("\nAgora, insira todos os elementos da tabela de transições");
         for (int i = 0; i < noOfStates; i++) {
             for (int j = 0; j < noOfTerminals; j++) {
                 if (i == 0 && j == 0) {
@@ -31,7 +31,7 @@ public class DFA {
             }
         }
 
-        System.out.println("Enter all the final states seprated by space");
+        System.out.println("\nPara finalizar, indique os estados finais, separados por vírgula: ");
         finalStates = finalStateScanner.nextLine().split(" ");
         // finalStates = DFAScanner.nextLine();
 
