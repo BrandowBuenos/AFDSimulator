@@ -14,7 +14,7 @@ public class DFA {
         // getting the DFA states to initialize the array
         System.out.print("\nInsira o número de estados do autômato: ");
         noOfStates = getValues.nextInt() + 1;
-        System.out.print("\nInsira o número de variáveis terminais do autômato: ");
+        System.out.print("\nInsira o número de símbolos terminais do autômato: ");
         noOfTerminals = getValues.nextInt() + 1;
 
         DfaTable = new char[noOfStates][noOfTerminals];
@@ -51,7 +51,7 @@ public class DFA {
                 }
             }
         }
-        return '$';
+        return ' ';
     }
 
     // return DfaTable[noOfStates-1][0];

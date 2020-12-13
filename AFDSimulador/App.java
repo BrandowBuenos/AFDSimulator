@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Main_stringMatching {
+public class App {
     static char currentChar;
     static char currentState;
     static char[] LineCharArray;
@@ -8,13 +8,12 @@ public class Main_stringMatching {
 
     public static void main(String[] args) {
 
-        // Scanner obj's
         Scanner inputScanner = new Scanner(System.in);
-        // reading input
         DFA.GetDFATable();
 
         boolean userSatisfied = false;
-        System.out.println("\nVamos lá ! Agora, verifique se as palavras pertencem a linguagem. Para sair, escreva sair.\n");
+        System.out.println(
+                "\nVamos lá ! Agora, verifique se as palavras pertencem a linguagem. Para sair, escreva sair.\n");
 
         while (!userSatisfied) {
             System.out.print("> ");
@@ -29,18 +28,18 @@ public class Main_stringMatching {
                 Algorithm(); // string matching algorithm
             }
         }
-    
+
         inputScanner.close();
-
-
     }
 
     private static void Algorithm() {
         // Algorithm used to match a DFA Table against a string
         currentState = DFA.InitialState(); // denotes current state
         currentChar = NextChar(); // current character from the input string
-        while (currentChar != '$') {
+        while (currentChar != ' ') {
             currentState = Move(currentState, currentChar);
+            System.out.print("- O símbolo " + currentChar + " foi lido e foi feito a transição para o estado "
+                    + currentState + ".\n");
             currentChar = NextChar();
         }
         // checking if input is correct or not
@@ -49,7 +48,7 @@ public class Main_stringMatching {
 
     private static char NextChar() {
         if (LineCharArray == null || LineCharArrayCount == LineCharArray.length) {
-            return '$';
+            return ' ';
         } else {
             return LineCharArray[LineCharArrayCount++];
         }
@@ -61,10 +60,10 @@ public class Main_stringMatching {
 
     private static String FinalStateChecker() {
         if (DFA.FinalState(currentState)) {
-            return "Esta palavra é aceita pela linguagem :) \n";
+            return "= Esta palavra é aceita pela linguagem :)\n";
         } else {
-            return "Esta palavra não é aceita pela linguagem :'( \n";
+            return "= Esta palavra não é aceita pela linguagem :'(\n";
         }
     }
-        
+
 }
