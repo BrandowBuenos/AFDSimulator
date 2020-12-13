@@ -16,8 +16,11 @@ public class AfdGUI implements ActionListener {
 
     private JLabel lClientes;
 
-    private JLabel lCpf;
-    private JTextField tCpf;
+    private JLabel lStates;
+    private JTextField tfNumStates;
+
+    private JLabel lTerminal;
+    private JTextField tfNumTerminal;
 
     private JButton bEnviar;
 
@@ -57,27 +60,29 @@ public class AfdGUI implements ActionListener {
         lClientes.setForeground(new Color(70, 130, 180));
         panel.add(lClientes);
 
-        lCpf = new JLabel("Número de estados do AFD:");
-        lCpf.setBounds(40, 160, 350, 40);
-        lCpf.setFont(new Font("Arial", Font.PLAIN, 20));
-        lCpf.setForeground(new Color(128, 128, 128));
-        panel.add(lCpf);
+        lStates = new JLabel("Número de estados do AFD:");
+        lStates.setBounds(40, 160, 350, 40);
+        lStates.setFont(new Font("Arial", Font.PLAIN, 20));
+        lStates.setForeground(new Color(128, 128, 128));
+        panel.add(lStates);
 
-        tCpf = new JTextField("");
-        tCpf.setBounds(330, 160, 120, 40);
-        tCpf.setFont(new Font("Arial", Font.PLAIN, 20));
-        panel.add(tCpf);
+        tfNumStates = new JTextField("");
+        tfNumStates.setBounds(330, 160, 120, 40);
+        tfNumStates.setFont(new Font("Arial", Font.PLAIN, 20));
+        panel.add(tfNumStates);
+        //int numColumns = Integer.parseInt(this.tfNumStates.getText());
 
-        lCpf = new JLabel("Número de símbolos terminais:");
-        lCpf.setBounds(40, 250, 350, 40);
-        lCpf.setFont(new Font("Arial", Font.PLAIN, 20));
-        lCpf.setForeground(new Color(128, 128, 128));
-        panel.add(lCpf);
+        lTerminal = new JLabel("Número de símbolos terminais:");
+        lTerminal.setBounds(40, 250, 350, 40);
+        lTerminal.setFont(new Font("Arial", Font.PLAIN, 20));
+        lTerminal.setForeground(new Color(128, 128, 128));
+        panel.add(lTerminal);
 
-        tCpf = new JTextField("");
-        tCpf.setBounds(330, 250, 120, 40);
-        tCpf.setFont(new Font("Arial", Font.PLAIN, 20));
-        panel.add(tCpf);
+        tfNumTerminal = new JTextField("");
+        tfNumTerminal.setBounds(330, 250, 120, 40);
+        tfNumTerminal.setFont(new Font("Arial", Font.PLAIN, 20));
+        panel.add(tfNumTerminal);
+        //int numLinhas = Integer.parseInt(this.tfNumTerminal.getText());
 
         bEnviar = new JButton("Gerar tabela");
         bEnviar.setBounds(40, 360, 430, 60);
@@ -86,6 +91,37 @@ public class AfdGUI implements ActionListener {
         bEnviar.setBackground(new Color(255, 255, 255));
         bEnviar.setForeground(new Color(0, 128, 128));
         panel.add(bEnviar);
+        bEnviar.addActionListener(new ActionListener() {
+
+            //inicializa a tabela vazia
+			public void actionPerformed(ActionEvent e) {
+
+                int numLinhas = Integer.parseInt(tfNumStates.getText());
+                int numColumns = Integer.parseInt(tfNumTerminal.getText());
+                String[] columnNames = new String[numColumns];
+                String[][] data = new String [numLinhas][numColumns];
+                for(int i = 0; i < numLinhas; i++){
+                    for(int j = 0; j < numColumns; j++){
+                        columnNames[j] = "Column" + (j + 1);
+                        data[i][j] = " ";
+                    }
+                }
+            // Initializing the JTable
+            j = new JTable(data, columnNames);
+            j.setBounds(560, 100, 500, 800);
+            j.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            Dimension dim = new Dimension(50,2);
+            j.setIntercellSpacing(new Dimension(dim));
+            //JTable.
+
+            // adding it to JScrollPane
+            JScrollPane sp = new JScrollPane(j); 
+            sp.setBounds(560, 100, 600, 325);
+
+            panel.add(sp);
+
+            }
+            });
 
         lClientes = new JLabel("2. Preencha a tabela");
         lClientes.setBounds(560, 40, 350, 60);
@@ -94,28 +130,21 @@ public class AfdGUI implements ActionListener {
         panel.add(lClientes);
 
         // Data to be displayed in the JTable
-        String[][] data;
-        for(int i = 0; i<5;i++){
-            for(int j; i<5;j++){
+        String[][] data = { {"GGG","GGG1", "GGG2", "GGGG"}, {"GGG", "GGG3", "GGG4", "GGGG"}, {"","","", "GGGG"} };
+        // for(int i = 0; i<5;i++){
+        //     for(int j; i<5;j++){
 
-                data[i][j] = Item { { "Kundan Kumar Jha", "4031", "CSE" },{ "Anand Jha", "6014", "IT" } };
+        //         //data[i][j] = { { "Kundan Kumar Jha", "4031", "CSE" },{ "Anand Jha", "6014", "IT" } };
                 
-            }
-        }
+        //     }
+        // }
         // Column Names
-        String[] columnNames = { "-", "a", "b" };
-
-        // Initializing the JTable
-        j = new JTable(data, columnNames);
-        j.setBounds(560, 100, 250, 500);
-
-        // adding it to JScrollPane
-        JScrollPane sp = new JScrollPane(j); 
-        sp.setBounds(560, 100, 350, 325);
-
-        panel.add(sp);
+        String[] columnNames = { "-", "a", "b", "c" };
+        
+        
 
         frame.setVisible(true);
+        
 
     }
 
