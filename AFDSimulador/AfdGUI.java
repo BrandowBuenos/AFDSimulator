@@ -4,6 +4,7 @@ import java.awt.event.*;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
 /**
  * Tela de ínicio
  */
@@ -14,8 +15,6 @@ public class AFDGUI implements ActionListener {
     private JLabel lTitulo;
 
     private JLabel lStep;
-    private JLabel lAlfabeto;
-    private JLabel lAlfabeto2;
 
     private JLabel lStates;
     private JTextField tfNumStates;
@@ -64,14 +63,7 @@ public class AFDGUI implements ActionListener {
         lTitulo.setFont(new Font("Arial", Font.PLAIN, 20));
         lTitulo.setForeground(new Color(255, 255, 255));
         frame.getContentPane().add(lTitulo);
-/*
-        lAlfabeto = new JLabel("Alfabeto:");
-        lAlfabeto2 = new JLabel("Σ =" + numTerminais + ".");
-        lAlfabeto.setBounds(1200, 40, 400, 60);
-        lAlfabeto.setFont(new Font("Arial", Font.PLAIN, 25));
-        lAlfabeto.setForeground(new Color(255, 255, 255));
-        frame.getContentPane().add(lAlfabeto);
-*/
+        
         panel = new JPanel();
         panel.setBounds(0, 150, 1366, 768);
         panel.setBackground(new Color(255, 255, 255));
@@ -94,7 +86,6 @@ public class AFDGUI implements ActionListener {
         tfNumStates.setBounds(40, 200, 300, 50);
         tfNumStates.setFont(new Font("Arial", Font.PLAIN, 20));
         panel.add(tfNumStates);
-        // int numColumns = Integer.parseInt(this.tfNumStates.getText());
 
         lTerminal = new JLabel("Nº de símbolos terminais:");
         lTerminal.setBounds(40, 280, 350, 40);
@@ -117,7 +108,6 @@ public class AFDGUI implements ActionListener {
         panel.add(bGenerateTable);
         bGenerateTable.addActionListener(new ActionListener() {
 
-            // inicializa a tabela vazia
             public void actionPerformed(ActionEvent e) {
                 numLinhas = Integer.parseInt(tfNumStates.getText());
                 numColumns = Integer.parseInt(tfNumTerminal.getText());
@@ -133,11 +123,9 @@ public class AFDGUI implements ActionListener {
                         } else {
                             columnNames[j] = ("C" + (j));
                         }
-                        // data[i][j] = " ";
                     }
                 }
 
-                // Initializing the JTable
                 j = new JTable(data, columnNames);
                 j.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 j.setBounds(480, 195, 400, 200);
@@ -145,10 +133,8 @@ public class AFDGUI implements ActionListener {
                 j.setIntercellSpacing(new Dimension(dim));
                 bSaveTable.setVisible(true);
                 bGenerateTable.setVisible(false);
-                // JTable.  
 
 
-                // adding it to JScrollPane
                 JScrollPane sp = new JScrollPane(j);
                 sp.setBounds(480, 195, 400, 200);
 
@@ -173,9 +159,7 @@ public class AFDGUI implements ActionListener {
         bSaveTable.setVisible(false);
         bSaveTable.addActionListener(new ActionListener() {
 
-            // inicializa a tabela vazia
             public void actionPerformed(ActionEvent e) {
-                //generateTableData(data, numLinhas, numColumns);
                 bSaveTable.setVisible(false);
                 tfTerm.setVisible(true);
                 lTerm.setVisible(true);
@@ -226,8 +210,7 @@ public class AFDGUI implements ActionListener {
         panel.add(bTestTerm);
         bTestTerm.setVisible(false);
         bTestTerm.addActionListener(new ActionListener() {
-
-            // inicializa a tabela vazia
+            
             public void actionPerformed(ActionEvent e) {
                 String palavra = getTfTerm().getText();
                 int qtd = palavra.length();
@@ -235,13 +218,10 @@ public class AFDGUI implements ActionListener {
                 for(int i=0;i<qtd;i++){
                     terms[i] = String.valueOf(palavra.charAt(i));
                 }
-                // for(int i = 0; i<terms.length; i++){
-                //     String test = terms[i];
-                //     System.out.println(test + " DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-                // }
-                // generateTableData(data, numLinhas, numColumns);
+
                 afd = new AFD(data, numLinhas, numColumns, getTFinalStates().getText().split(" "), terms, 0);
-                afd.algoritmo();  
+                afd.iniciarAFD();  
+                generateTableData(data, numLinhas, numColumns);
             }
         });
 
@@ -253,11 +233,6 @@ public class AFDGUI implements ActionListener {
 
     }
 
-    public static void panelInicio(JPanel j) {
-        frame.add(j);
-        j.setVisible(true);
-    }
-
     public static void generateTableData(String[][] table, int numLinhas, int numColumns) {
         for (int i = 0; i < numLinhas; i++) {
             for (int j = 0; j < numColumns; j++) {
@@ -265,6 +240,11 @@ public class AFDGUI implements ActionListener {
                 System.out.println(test);
             }
         }
+    }
+
+    public static void panelInicio(JPanel j) {
+        frame.add(j);
+        j.setVisible(true);
     }
 
     public JTextField getTfNumStates() {
@@ -306,7 +286,5 @@ public class AFDGUI implements ActionListener {
     public void setTFinalStates(JTextField tFinalStates) {
         this.tFinalStates = tFinalStates;
     }
-
-    
 
 }

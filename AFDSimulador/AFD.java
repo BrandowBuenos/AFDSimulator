@@ -25,15 +25,9 @@ public class AFD {
 
     private String proximoEstado(String estadoAtual, String characterAtual) {
         for (int i = 1; i < this.numEstados; i++) {
-            System.out.println("ESTADO ATUAL: "+ estadoAtual);
-            System.out.println("ESTADO TABELA: "+ this.aFDTable[i][0]);
             if (estadoAtual.charAt(0) == this.aFDTable[i][0].charAt(0)) {
-                System.out.println("PASSOU");
-                for (int j = 1; j < this.numTerminais; j++) {
-                    System.out.println("CARACTERE ATUAL: "+ characterAtual.charAt(0));
-                    System.out.println("ATUAL TABELA: "+ this.aFDTable[0][j].charAt(0));
+                for (int j = 1; j < this.numTerminais; j++) {             
                     if (characterAtual.charAt(0) == this.aFDTable[0][j].charAt(0)) {
-                        System.out.println("PASSOU TUDO");
                         return this.aFDTable[i][j];
                     }
                 }
@@ -52,25 +46,17 @@ public class AFD {
         return false;
     }
 
-    public void algoritmo() {
-        // Algoritmo usado para comparar uma tabela AFD com uma string
-        // System.out.println(estadoInicial() + " AQUIIIIIIIIII");
-        // for(int i = 0; i<estadosFinais.length; i++){
-        //     String test = estadosFinais[i];
-        //     System.out.println(test + " DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-        // }
-        //generateTableData(aFDTable, numEstados, numTerminais);
-        this.estadoAtual = estadoInicial(); // denota estado atual
-        this.characterAtual = proximoCharacter(); // caractere atual da string de entrada
+    public void iniciarAFD() {
+
+        this.estadoAtual = estadoInicial(); 
+        this.characterAtual = proximoCharacter(); 
 
         while (characterAtual != " ") {
-            this.estadoAtual = move(this.estadoAtual, this.characterAtual); // move para proximo transição
+            this.estadoAtual = move(this.estadoAtual, this.characterAtual); 
             System.out.print("- O símbolo " + this.characterAtual + " foi lido e foi feito a transição para o estado "
                     + estadoAtual + ".\n");
             this.characterAtual = proximoCharacter();
         }
-
-        // verificando se a entrada está correta ou não
         checarEstadoFinal();
     }
 
@@ -91,15 +77,6 @@ public class AFD {
             JOptionPane.showMessageDialog(null, "Essa palavra é aceita pela linguagem.");
         } else {
             JOptionPane.showMessageDialog(null, "Essa palavra não é aceita pela linguagem");
-        }
-    }
-
-    public static void generateTableData(String[][] table, int numLinhas, int numColumns) {
-        for (int i = 0; i < numLinhas; i++) {
-            for (int j = 0; j < numColumns; j++) {
-                String test = table[i][j];
-                System.out.println(test);
-            }
         }
     }
 
