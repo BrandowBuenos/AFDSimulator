@@ -4,33 +4,50 @@ import java.awt.event.*;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-
 /**
  * Tela de ínicio
  */
-public class AfdGUI implements ActionListener {
+public class AFDGUI implements ActionListener {
 
     public JPanel panel;
     public static JFrame frame;
     private JLabel lTitulo;
 
-    private JLabel lClientes;
+    private JLabel lStep;
+    private JLabel lAlfabeto;
+    private JLabel lAlfabeto2;
 
     private JLabel lStates;
     private JTextField tfNumStates;
 
+    private JLabel lTerm;
+    private JTextField tfTerm;
+
     private JLabel lTerminal;
     private JTextField tfNumTerminal;
 
-    private JButton bEnviar;
+    private JButton bGenerateTable;
 
-    JTable j;
+    private JTable j;
+    private int numLinhas;
+    private int numColumns;
+    private String[] columnNames;
+    private String[][] data;
 
-    public AfdGUI() {
+    private JLabel lFinalStates;
+    private JTextField tFinalStates;
+
+    private JButton bSaveTable;
+
+    private JButton bTestTerm;
+
+    private AFD afd;
+
+    public AFDGUI() {
 
         frame = new JFrame("AFD Simulator");
         frame.getContentPane().setBackground(new Color(70, 130, 180));
-        frame.setSize(1280, 768);
+        frame.setSize(1366, 768);
         frame.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -47,104 +64,188 @@ public class AfdGUI implements ActionListener {
         lTitulo.setFont(new Font("Arial", Font.PLAIN, 20));
         lTitulo.setForeground(new Color(255, 255, 255));
         frame.getContentPane().add(lTitulo);
-
+/*
+        lAlfabeto = new JLabel("Alfabeto:");
+        lAlfabeto2 = new JLabel("Σ =" + numTerminais + ".");
+        lAlfabeto.setBounds(1200, 40, 400, 60);
+        lAlfabeto.setFont(new Font("Arial", Font.PLAIN, 25));
+        lAlfabeto.setForeground(new Color(255, 255, 255));
+        frame.getContentPane().add(lAlfabeto);
+*/
         panel = new JPanel();
-        panel.setBounds(0, 150, 1280, 768);
+        panel.setBounds(0, 150, 1366, 768);
         panel.setBackground(new Color(255, 255, 255));
         panel.setLayout(null);
         frame.getContentPane().add(panel);
 
-        lClientes = new JLabel("1. Algumas informações");
-        lClientes.setBounds(140, 40, 350, 60);
-        lClientes.setFont(new Font("Arial", Font.TRUETYPE_FONT, 24));
-        lClientes.setForeground(new Color(70, 130, 180));
-        panel.add(lClientes);
+        lStep = new JLabel("1. Algumas informações");
+        lStep.setBounds(40, 40, 350, 60);
+        lStep.setFont(new Font("Arial", Font.TRUETYPE_FONT, 24));
+        lStep.setForeground(new Color(70, 130, 180));
+        panel.add(lStep);
 
-        lStates = new JLabel("Número de estados do AFD:");
-        lStates.setBounds(40, 160, 350, 40);
+        lStates = new JLabel("Nº de estados do AFD:");
+        lStates.setBounds(40, 140, 350, 40);
         lStates.setFont(new Font("Arial", Font.PLAIN, 20));
         lStates.setForeground(new Color(128, 128, 128));
         panel.add(lStates);
 
         tfNumStates = new JTextField("");
-        tfNumStates.setBounds(330, 160, 120, 40);
+        tfNumStates.setBounds(40, 200, 300, 50);
         tfNumStates.setFont(new Font("Arial", Font.PLAIN, 20));
         panel.add(tfNumStates);
-        //int numColumns = Integer.parseInt(this.tfNumStates.getText());
+        // int numColumns = Integer.parseInt(this.tfNumStates.getText());
 
-        lTerminal = new JLabel("Número de símbolos terminais:");
-        lTerminal.setBounds(40, 250, 350, 40);
+        lTerminal = new JLabel("Nº de símbolos terminais:");
+        lTerminal.setBounds(40, 280, 350, 40);
         lTerminal.setFont(new Font("Arial", Font.PLAIN, 20));
         lTerminal.setForeground(new Color(128, 128, 128));
         panel.add(lTerminal);
 
         tfNumTerminal = new JTextField("");
-        tfNumTerminal.setBounds(330, 250, 120, 40);
+        tfNumTerminal.setBounds(40, 340, 300, 50);
         tfNumTerminal.setFont(new Font("Arial", Font.PLAIN, 20));
+
         panel.add(tfNumTerminal);
-        //int numLinhas = Integer.parseInt(this.tfNumTerminal.getText());
 
-        bEnviar = new JButton("Gerar tabela");
-        bEnviar.setBounds(40, 360, 430, 60);
-        bEnviar.setFont(new Font("Helvetica Neue", Font.PLAIN, 20));
-        bEnviar.addActionListener(this);
-        bEnviar.setBackground(new Color(255, 255, 255));
-        bEnviar.setForeground(new Color(0, 128, 128));
-        panel.add(bEnviar);
-        bEnviar.addActionListener(new ActionListener() {
+        bGenerateTable = new JButton("Gerar tabela");
+        bGenerateTable.setBounds(40, 460, 300, 60);
+        bGenerateTable.setFont(new Font("Helvetica Neue", Font.PLAIN, 20));
+        bGenerateTable.addActionListener(this);
+        bGenerateTable.setBackground(new Color(255, 255, 255));
+        bGenerateTable.setForeground(new Color(0, 128, 128));
+        panel.add(bGenerateTable);
+        bGenerateTable.addActionListener(new ActionListener() {
 
-            //inicializa a tabela vazia
-			public void actionPerformed(ActionEvent e) {
+            // inicializa a tabela vazia
+            public void actionPerformed(ActionEvent e) {
+                numLinhas = Integer.parseInt(tfNumStates.getText());
+                numColumns = Integer.parseInt(tfNumTerminal.getText());
+                numColumns = numColumns + 1;
+                numLinhas = numLinhas + 1;
+                columnNames = new String[numColumns];
+                data = new String[numLinhas][numColumns];
 
-                int numLinhas = Integer.parseInt(tfNumStates.getText());
-                int numColumns = Integer.parseInt(tfNumTerminal.getText());
-                String[] columnNames = new String[numColumns];
-                String[][] data = new String [numLinhas][numColumns];
-                for(int i = 0; i < numLinhas; i++){
-                    for(int j = 0; j < numColumns; j++){
-                        columnNames[j] = "Column" + (j + 1);
-                        data[i][j] = " ";
+                for (int i = 0; i < numLinhas; i++) {
+                    for (int j = 0; j < numColumns; j++) {
+                        if (j == 0) {
+                            columnNames[j] = "-";
+                        } else {
+                            columnNames[j] = ("C" + (j));
+                        }
+                        // data[i][j] = " ";
                     }
                 }
-            // Initializing the JTable
-            j = new JTable(data, columnNames);
-            j.setBounds(560, 100, 500, 800);
-            j.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            Dimension dim = new Dimension(50,2);
-            j.setIntercellSpacing(new Dimension(dim));
-            //JTable.
 
-            // adding it to JScrollPane
-            JScrollPane sp = new JScrollPane(j); 
-            sp.setBounds(560, 100, 600, 325);
+                // Initializing the JTable
+                j = new JTable(data, columnNames);
+                j.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                j.setBounds(480, 195, 400, 200);
+                Dimension dim = new Dimension(50, 2);
+                j.setIntercellSpacing(new Dimension(dim));
+                bSaveTable.setVisible(true);
+                bGenerateTable.setVisible(false);
+                // JTable.  
 
-            panel.add(sp);
+
+                // adding it to JScrollPane
+                JScrollPane sp = new JScrollPane(j);
+                sp.setBounds(480, 195, 400, 200);
+
+                panel.add(sp);
 
             }
-            });
+        });
 
-        lClientes = new JLabel("2. Preencha a tabela");
-        lClientes.setBounds(560, 40, 350, 60);
-        lClientes.setFont(new Font("Arial", Font.TRUETYPE_FONT, 24));
-        lClientes.setForeground(new Color(70, 130, 180));
-        panel.add(lClientes);
+        lStep = new JLabel("2. Preencha a tabela");
+        lStep.setBounds(480, 40, 350, 60);
+        lStep.setFont(new Font("Arial", Font.TRUETYPE_FONT, 24));
+        lStep.setForeground(new Color(70, 130, 180));
+        panel.add(lStep);
 
-        // Data to be displayed in the JTable
-        String[][] data = { {"GGG","GGG1", "GGG2", "GGGG"}, {"GGG", "GGG3", "GGG4", "GGGG"}, {"","","", "GGGG"} };
-        // for(int i = 0; i<5;i++){
-        //     for(int j; i<5;j++){
+        bSaveTable = new JButton("Pronto !");
+        bSaveTable.setBounds(480, 460, 400, 60);
+        bSaveTable.setFont(new Font("Helvetica Neue", Font.PLAIN, 20));
+        bSaveTable.addActionListener(this);
+        bSaveTable.setBackground(new Color(255, 255, 255));
+        bSaveTable.setForeground(new Color(0, 128, 128));
+        panel.add(bSaveTable);
+        bSaveTable.setVisible(false);
+        bSaveTable.addActionListener(new ActionListener() {
 
-        //         //data[i][j] = { { "Kundan Kumar Jha", "4031", "CSE" },{ "Anand Jha", "6014", "IT" } };
-                
-        //     }
-        // }
-        // Column Names
-        String[] columnNames = { "-", "a", "b", "c" };
-        
-        
+            // inicializa a tabela vazia
+            public void actionPerformed(ActionEvent e) {
+                //generateTableData(data, numLinhas, numColumns);
+                bSaveTable.setVisible(false);
+                tfTerm.setVisible(true);
+                lTerm.setVisible(true);
+                bTestTerm.setVisible(true);
+                lFinalStates.setVisible(true);
+                tFinalStates.setVisible(true);
+            }
+        });
+
+        lStep = new JLabel("3. Teste :)");
+        lStep.setBounds(1000, 40, 350, 60);
+        lStep.setFont(new Font("Arial", Font.TRUETYPE_FONT, 24));
+        lStep.setForeground(new Color(70, 130, 180));
+        panel.add(lStep);
+
+        lFinalStates = new JLabel("Estados finais (separados por vírgula):");
+        lFinalStates.setBounds(1000, 140, 350, 40);
+        lFinalStates.setFont(new Font("Arial", Font.PLAIN, 20));
+        lFinalStates.setForeground(new Color(128, 128, 128));
+        panel.add(lFinalStates);
+        lFinalStates.setVisible(false);
+
+        tFinalStates = new JTextField("");
+        tFinalStates.setBounds(1000, 200, 300, 40);
+        tFinalStates.setFont(new Font("Arial", Font.PLAIN, 20));
+        panel.add(tFinalStates);
+        tFinalStates.setVisible(false);
+
+        lTerm = new JLabel("Palavra:");
+        lTerm.setBounds(1000, 280, 350, 40);
+        lTerm.setFont(new Font("Arial", Font.PLAIN, 20));
+        lTerm.setForeground(new Color(128, 128, 128));
+        panel.add(lTerm);
+        lTerm.setVisible(false);
+
+        tfTerm = new JTextField("");
+        tfTerm.setBounds(1000, 340, 300, 40);
+        tfTerm.setFont(new Font("Arial", Font.PLAIN, 20));
+        panel.add(tfTerm);
+        tfTerm.setVisible(false);
+
+        bTestTerm = new JButton("Testar palavra");
+        bTestTerm.setBounds(1000, 460, 300, 60);
+        bTestTerm.setFont(new Font("Helvetica Neue", Font.PLAIN, 20));
+        bTestTerm.addActionListener(this);
+        bTestTerm.setBackground(new Color(255, 255, 255));
+        bTestTerm.setForeground(new Color(0, 128, 128));
+        panel.add(bTestTerm);
+        bTestTerm.setVisible(false);
+        bTestTerm.addActionListener(new ActionListener() {
+
+            // inicializa a tabela vazia
+            public void actionPerformed(ActionEvent e) {
+                String palavra = getTfTerm().getText();
+                int qtd = palavra.length();
+                String[] terms = new String[qtd];
+                for(int i=0;i<qtd;i++){
+                    terms[i] = String.valueOf(palavra.charAt(i));
+                }
+                // for(int i = 0; i<terms.length; i++){
+                //     String test = terms[i];
+                //     System.out.println(test + " DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+                // }
+                // generateTableData(data, numLinhas, numColumns);
+                afd = new AFD(data, numLinhas, numColumns, getTFinalStates().getText().split(" "), terms, 0);
+                afd.algoritmo();  
+            }
+        });
 
         frame.setVisible(true);
-        
 
     }
 
@@ -156,5 +257,56 @@ public class AfdGUI implements ActionListener {
         frame.add(j);
         j.setVisible(true);
     }
+
+    public static void generateTableData(String[][] table, int numLinhas, int numColumns) {
+        for (int i = 0; i < numLinhas; i++) {
+            for (int j = 0; j < numColumns; j++) {
+                String test = table[i][j];
+                System.out.println(test);
+            }
+        }
+    }
+
+    public JTextField getTfNumStates() {
+        return tfNumStates;
+    }
+
+    public void setTfNumStates(JTextField tfNumStates) {
+        this.tfNumStates = tfNumStates;
+    }
+
+    public JTextField getTfTerm() {
+        return tfTerm;
+    }
+
+    public void setTfTerm(JTextField tfTerm) {
+        this.tfTerm = tfTerm;
+    }
+
+    public JTextField getTfNumTerminal() {
+        return tfNumTerminal;
+    }
+
+    public void setTfNumTerminal(JTextField tfNumTerminal) {
+        this.tfNumTerminal = tfNumTerminal;
+    }
+
+    public String[][] getData() {
+        return data;
+    }
+
+    public void setData(String[][] data) {
+        this.data = data;
+    }
+
+    public JTextField getTFinalStates() {
+        return tFinalStates;
+    }
+
+    public void setTFinalStates(JTextField tFinalStates) {
+        this.tFinalStates = tFinalStates;
+    }
+
+    
 
 }
